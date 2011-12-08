@@ -7,58 +7,48 @@
 //
 
 #import "ViewController.h"
+#import "HelloWorldBrain.h"
+
+@interface ViewController()
+@property (nonatomic) BOOL userIsInMiddleOfTyping;
+@property (nonatomic, strong) HelloWorldBrain* brain;
+@end
 
 @implementation ViewController
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
+@synthesize display = _display;
+@synthesize userIsInMiddleOfTyping = _userIsInMiddleOfTyping;
+@synthesize brain = _brain;
+
+- (HelloWorldBrain*) brain {
+  if (!_brain) {
+    _brain = [[HelloWorldBrain alloc] init];
+  }
+  return _brain;
 }
-
-#pragma mark - View lifecycle
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    // Return YES for supported orientations
-  if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-      return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (IBAction)digitPressed:(UIButton*) sender {
+  NSString* value = sender.currentTitle;
+  if (self.userIsInMiddleOfTyping) {
+    self.display.text = [self.display.text stringByAppendingString:value];
   } else {
-      return YES;
+    self.display.text = value;
+    self.userIsInMiddleOfTyping = YES;
   }
 }
+
+- (IBAction)enterPressed {
+  [self.brain pushOperand: [self.display.text doubleValue]];
+  self.userIsInMiddleOfTyping = NO;
+}
+
+- (IBAction)operandPressed:(UIButton*)sender {
+  if (self.userIsInMiddleOfTyping) {
+    [self enterPressed];
+  }
+  double result = [self.brain performOperation:sender.currentTitle];
+  self.display.text = [NSString stringWithFormat:@"%g", result];
+}
+
+
 
 @end
