@@ -12,6 +12,10 @@
 
 -(void) pushOperand:(double) operand;
 
--(double) performOperation:(NSString*) operation;
+-(void) pushOperation: (NSString*) operation;
+
+-(double) performOperation;
+
+-(void) reset;
 
 @end

@@ -39,16 +39,30 @@
 - (IBAction)enterPressed {
   [self.brain pushOperand: [self.display.text doubleValue]];
   self.userIsInMiddleOfTyping = NO;
+  double result = [self.brain performOperation];
+  self.display.text = [NSString stringWithFormat:@"%f",result];
+  [self.brain pushOperand: result];
 }
 
 - (IBAction)operandPressed:(UIButton*)sender {
   if (self.userIsInMiddleOfTyping) {
-    [self enterPressed];
+    self.userIsInMiddleOfTyping = NO;
   }
-  double result = [self.brain performOperation:sender.currentTitle];
-  self.display.text = [NSString stringWithFormat:@"%g", result];
+  [self.brain pushOperand:[self.display.text doubleValue]];
+  [self.brain pushOperation:[sender currentTitle]];
 }
 
+- (IBAction)clearPressed {
+  // clear all the context.
+  self.userIsInMiddleOfTyping = NO;
+  self.display.text = @"0";
+  [self.brain reset];
+}
+
+- (IBAction)singleOperandPressed:(UIButton*)sender {
+  [self operandPressed:sender];
+  [self enterPressed];
+}
 
 
 @end
