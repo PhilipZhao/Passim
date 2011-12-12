@@ -57,6 +57,7 @@
 }
 
 -(double) performOperation {
+  NSLog(@"Hello World");
   double result = 0;
   NSString* operation = [self popOperation];
   if ([operation isEqualToString:@"+"]) {
