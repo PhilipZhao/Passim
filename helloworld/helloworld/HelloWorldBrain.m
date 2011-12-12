@@ -58,6 +58,7 @@
 
 -(double) performOperation {
   NSLog(@"Hello World");
+  NSLog(@"Hello again");
   double result = 0;
   NSString* operation = [self popOperation];
   if ([operation isEqualToString:@"+"]) {
